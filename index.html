@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>贪吃蛇</title>
+  <style>
+    .box {
+      width: 870px;
+      margin: 0 auto;
+      text-align: center;
+      line-height: 40px;
+      color: #ccc;
+    }
+
+    .box > div {
+      width: 40px;
+      height: 40px;
+      border: 1px solid #ccc;
+      float: left;
+    }
+
+    .she {
+      background-color: red;
+    }
+
+    .food {
+      background-color: green;
+    }
+  </style>
+</head>
+<body>
+<div class="box"></div>
+<script>
+  var box = document.querySelector(".box");
+  //地图初始化
+  var content = "";
+  for (var i = 0; i < 300; i++) {
+    content += "<div>" + i + "</div>";
+  }
+  box.innerHTML = content;
+  //蛇初始位置
+  var she = [96, 95, 94];
+  //食物初始位置
+  var food = parseInt(Math.random() * 300);
+  //初始运动方向
+  var direction = "left";
+  //定时器
+  var timer;
+
+  timer = setInterval(function () {
+    run();
+  }, 200);
+
+  var maps = box.getElementsByTagName("div");
+  //地图初始化
+  var Draw = function () {
+    for (var i = 0; i < maps.length; i++) {
+      maps[i].className = "";
+      for (var j = 0; j < she.length; j++) {
+        maps[she[j]].className = "she";
+      }
+      maps[food].className = "food";
+    }
+  };
+  Draw();
+
+  //按键改变方向
+  window.onkeydown = function (e) {
+    var dir = e.keyCode;
+    switch (dir) {
+      case 37:
+        direction = "left";
+        break;
+      case 38:
+        direction = "top";
+        break;
+      case 39:
+        direction = "right";
+        break;
+      case 40:
+        direction = "bottom";
+        break;
+    }
+  };
+
+  var run = function () {
+    var num = she[she.length - 1];
+    for (var i = 0; i < she.length; i++) {
+      she[i] = she[i + 1];
+    }
+    switch (direction) {
+      case "left":
+        she[she.length - 1] = num - 1;
+        break;
+      case "top":
+        she[she.length - 1] = num - 20;
+        break;
+      case "right":
+        she[she.length - 1] = num + 1;
+        break;
+      case "bottom":
+        she[she.length - 1] = num + 20;
+        break;
+      default:
+        alert("xxx");
+    }
+
+    if (she[she.length - 1] == food) {
+      var temp;
+      switch (direction) {
+        case 'left' :
+          temp = she[she.length - 1] - 1;
+          break;
+        case 'right':
+          temp = she[she.length - 1] + 1;
+          break;
+        case 'bottom' :
+          temp = she[she.length - 1] + 20;
+          break;
+        case 'top'  :
+          temp = she[she.length - 1] - 20;
+          break;
+      }
+      she.push(temp);
+      food = parseInt(Math.random() * 300);
+    }
+    Draw();
+    IsOver();
+  };
+
+  var IsOver = function () {
+    for (var i = 1; i < she.length; i++) {
+      if (she[0] == she[i]) {
+        clearInterval(timer);
+        she = [161, 162, 180, 200, 220, 241, 242, 183, 203, 223, 165, 185, 205, 225, 246, 167, 187, 207, 227, 169, 170, 171, 189, 209, 210, 211, 229, 249, 250, 251, 173, 174, 175, 193, 213, 214, 215, 196, 233, 235, 253, 256, 176, 216, 178, 198, 218, 258];
+        she.sort();
+        Draw();
+        break;
+      }
+
+    }
+  };
+</script>
+</body>
+</html>
